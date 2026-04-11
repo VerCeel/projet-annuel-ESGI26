@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "./services/api";
-import { Button } from "./components/ui/Button";
+import { Button } from "./components/ui/button";
 
 function App() {
   const [message, setMessage] = useState("");
