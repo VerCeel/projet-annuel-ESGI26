@@ -4,7 +4,7 @@ services:
     container_name: esgi_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: backend
+      POSTGRES_DB: budgie_db
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     ports:
@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root -d backend"]
+      test: ["CMD-SHELL", "pg_isready -U root -d budgie_db"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -35,7 +35,7 @@ services:
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_DATABASE: backend
+      DB_DATABASE: budgie_db
       DB_USERNAME: root
       DB_PASSWORD: root
       SESSION_DRIVER: file
