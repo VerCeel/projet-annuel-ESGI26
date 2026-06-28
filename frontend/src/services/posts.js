@@ -5,6 +5,11 @@ export async function getPosts() {
   return response.data;
 }
 
+export async function getPost(id) {
+  const response = await api.get(`/posts/${id}`);
+  return response.data;
+}
+
 export async function createPost(payload) {
   const response = await api.post("/posts", payload);
   return response.data;

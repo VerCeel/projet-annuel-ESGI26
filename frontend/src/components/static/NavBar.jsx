@@ -1,49 +1,51 @@
+import { NavLink } from "react-router-dom";
+import { Feather, Home, Package, Rows3, Tag } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
 const links = [
-    {
-    href: "/",
-    label: "Page-1",
-  },
-  {
-    href: "/",
-    label: "Page-2",
-  },
-  {
-    href: "/",
-    label: "Page-3",
-  }
+  { to: "/", label: "Home", icon: Home, end: true },
+  { to: "/posts", label: "Posts", icon: Rows3 },
+  { to: "/categories", label: "Categories", icon: Tag },
+  { to: "/products", label: "Products", icon: Package },
 ];
 
-const NavBar = () => {
-  const pathname = window.location.pathname;
+export default function NavBar() {
   return (
-    <div className="fixed text-neutral-300 text-sm md:text-xl hover:text-white top-6 shadow-lg ring-2 ring-black/20 md:px-10 px-3 md:left-20 md:right-20 left-3 right-3 z-50 flex items-center justify-between py-3 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl">
-      <a href={"/"} className="flex md:gap-2 gap-1 items-center">
-        Budgie
-      </a>
+    <header className="fixed inset-x-0 top-0 z-50 border-b bg-background/80 backdrop-blur-xl">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
+        <NavLink
+          to="/"
+          className="group flex items-center gap-2 text-sm font-semibold md:text-base"
+        >
+          <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20 transition group-hover:bg-primary/20">
+            <Feather className="size-4" />
+          </span>
+          Budgie
+        </NavLink>
 
-      <div className="flex items-center md:gap-4 gap-2">
-        {links.map((link, index) => {
-          const isActive = pathname === link.href;
-          return (
-            <a
-              key={index}
-              href={link.href}
-              className={`group relative  transition-colors duration-100 ${
-                isActive ? "text-white" : "text-neutral-300 hover:text-white"
-              }`}
+        <div className="flex items-center gap-1">
+          {links.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium transition md:gap-2 md:px-4 md:text-sm",
+                  isActive
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                )
+              }
             >
-              {link.label}
-              <span
-                className={`absolute left-0 bottom-[2px] h-[2px] rounded-full w-full bg-neutral-200 transition-transform duration-100 ease-out ${
-                  isActive ? "scale-x-100" : "scale-x-0"
-                } origin-left group-hover:scale-x-100`}
-              />
-            </a>
-          );
-        })}
-      </div>
-    </div>
+              <Icon className="size-3.5 md:size-4" />
+              <span className="hidden sm:inline">{label}</span>
+              <span className="sr-only sm:hidden">{label}</span>
+            </NavLink>
+          ))}
+        </div>
+      </nav>
+    </header>
   );
-};
-
-export default NavBar;
+}

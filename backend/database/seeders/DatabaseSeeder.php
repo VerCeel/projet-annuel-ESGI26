@@ -5,16 +5,28 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\CategorySeeder;
+use Database\Seeders\ProductSeeder;
+use Database\Seeders\ClientSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+
 
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
+        $this->call([
+            CategorySeeder::class,
+            ProductSeeder::class,
+            ClientSeeder::class,
+        ]);
+
+
         // User::factory(10)->create();
 
         User::factory()->create([
