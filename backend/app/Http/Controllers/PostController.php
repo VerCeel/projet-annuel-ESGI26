@@ -8,12 +8,13 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index(): JsonResponse
+    public function index()
     {
-        return response()->json(Posts::latest()->get());
+        $posts = Posts::orderBy('updated_at', 'desc')->get();
+        return response()->json($posts);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -25,12 +26,12 @@ class PostController extends Controller
         return response()->json($post, 201);
     }
 
-    public function show(Posts $post): JsonResponse
+    public function show(Posts $post)
     {
         return response()->json($post);
     }
 
-    public function update(Request $request, Posts $post): JsonResponse
+    public function update(Request $request, Posts $post)
     {
         $validated = $request->validate([
             'title' => ['sometimes', 'required', 'string', 'max:255'],
@@ -42,7 +43,7 @@ class PostController extends Controller
         return response()->json($post);
     }
 
-    public function destroy(Posts $post): JsonResponse
+    public function destroy(Posts $post)
     {
         $post->delete();
 

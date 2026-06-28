@@ -13,7 +13,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::orderBy('updated_at', 'desc')->get();
+        return response()->json($clients);
     }
 
     /**
