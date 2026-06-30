@@ -7,6 +7,7 @@ import Layout from "./components/static/Layout";
 import { AuthProvider } from "./contexts/AuthContext";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
+import CommandsPage from "./pages/CommandsPage";
 import CreateCategoryPage from "./pages/CreateCategoryPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import EditCategoryPage from "./pages/EditCategoryPage";
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="categories/:id" element={<CategoryDetailPage />} />
               <Route path="categories/:id/edit" element={<EditCategoryPage />} />
               <Route path="products" element={<ProductsPage />} />
+              <Route path="commands" element={<CommandsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
