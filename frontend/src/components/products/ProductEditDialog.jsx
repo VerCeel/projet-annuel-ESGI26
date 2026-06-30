@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { extractApiError } from "@/lib/api-error";
 import { getCategories } from "@/services/categories";
 import { updateProduct } from "@/services/products";
 
@@ -63,11 +64,10 @@ export default function ProductEditDialog({ product, open, onOpenChange, onUpdat
       });
       onUpdated?.(updated);
       onOpenChange(false);
-    } catch {
-      setError("Failed to update the product. Please try again.");
-      toast.error("Update failed", {
-        description: "Could not save the product.",
-      });
+    } catch (err) {
+      const message = extractApiError(err, "Failed to update the product. Please try again.");
+      setError(message);
+      toast.error("Update failed", { description: message });
     } finally {
       setSaving(false);
     }

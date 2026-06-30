@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('stock');
             $table->enum('status', ['in stock', 'out of stock']);
             $table->foreignId('category_id')->constrained('categories');

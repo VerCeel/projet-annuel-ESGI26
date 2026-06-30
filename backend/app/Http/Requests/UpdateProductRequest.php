@@ -21,7 +21,7 @@ class UpdateProductRequest extends FormRequest
             'name' => 'string|max:255',
             'description' => 'string',
             'price' => 'numeric|min:0',
-            'image' => 'string|max:2048',
+            'image' => 'nullable|string|max:2048',
             'stock' => 'integer|min:0',
             'status' => 'in:in stock,out of stock',
             'category_id' => 'exists:categories,id',

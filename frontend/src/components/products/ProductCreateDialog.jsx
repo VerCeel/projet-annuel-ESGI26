@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { extractApiError } from "@/lib/api-error";
 import { getCategories } from "@/services/categories";
 import { createProduct } from "@/services/products";
 
@@ -64,11 +65,10 @@ export default function ProductCreateDialog({ open, onOpenChange, onCreated }) {
       });
       onCreated?.(product);
       handleOpenChange(false);
-    } catch {
-      setError("Failed to create the product. Please try again.");
-      toast.error("Create failed", {
-        description: "Could not create the product.",
-      });
+    } catch (err) {
+      const message = extractApiError(err, "Failed to create the product. Please try again.");
+      setError(message);
+      toast.error("Create failed", { description: message });
     } finally {
       setLoading(false);
     }

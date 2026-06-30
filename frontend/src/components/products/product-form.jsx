@@ -71,7 +71,7 @@ export function ProductFormFields({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`${idPrefix}-image`}>Image URL</Label>
+        <Label htmlFor={`${idPrefix}-image`}>Image URL (optional)</Label>
         <Input
           id={`${idPrefix}-image`}
           value={values.image}
@@ -148,7 +148,7 @@ export function formToPayload(values) {
     name: values.name.trim(),
     description: values.description.trim(),
     price: Number(values.price),
-    image: values.image.trim(),
+    image: values.image.trim() || null,
     stock: Number(values.stock),
     status: values.status,
     category_id: Number(values.category_id),
@@ -158,9 +158,6 @@ export function formToPayload(values) {
 export function validateProductForm(values) {
   if (!values.name.trim() || !values.description.trim()) {
     return "Name and description are required.";
-  }
-  if (!values.image.trim()) {
-    return "Image URL is required.";
   }
   if (!values.category_id) {
     return "Please select a category.";

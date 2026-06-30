@@ -94,18 +94,7 @@ export function commandTotal(values, products) {
   }, 0);
 }
 
-/**
- * Pull a readable message out of a Laravel error response (validation / stock).
- */
-export function extractApiError(error, fallback) {
-  const data = error?.response?.data;
-  if (data?.errors) {
-    const first = Object.values(data.errors)[0];
-    if (Array.isArray(first) && first[0]) return first[0];
-  }
-  if (data?.message) return data.message;
-  return fallback;
-}
+export { extractApiError } from "@/lib/api-error";
 
 export function CommandFormFields({
   idPrefix,
