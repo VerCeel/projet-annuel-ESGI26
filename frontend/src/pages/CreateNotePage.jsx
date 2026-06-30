@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createPost } from "@/services/posts";
+import { createNote } from "@/services/notes";
 
-export default function CreatePostPage() {
+export default function CreateNotePage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -34,15 +34,15 @@ export default function CreatePostPage() {
 
     setLoading(true);
     try {
-      const post = await createPost({ title: title.trim(), content: content.trim() });
-      toast.success("Post created", {
-        description: `"${post.title}" has been published.`,
+      const note = await createNote({ title: title.trim(), content: content.trim() });
+      toast.success("Note created", {
+        description: `"${note.title}" has been saved.`,
       });
-      navigate("/posts");
+      navigate("/notes");
     } catch {
-      setError("Failed to create the post. Please try again.");
+      setError("Failed to create the note. Please try again.");
       toast.error("Create failed", {
-        description: "Could not publish the post.",
+        description: "Could not save the note.",
       });
     } finally {
       setLoading(false);
@@ -52,18 +52,16 @@ export default function CreatePostPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8 md:px-6">
       <Button asChild variant="ghost" className="w-fit">
-        <Link to="/posts">
+        <Link to="/notes">
           <ArrowLeft data-icon="inline-start" />
-          Back to posts
+          Back to notes
         </Link>
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>Create a new post</CardTitle>
-          <CardDescription>
-            Share a title and content — it will be saved to your Laravel API.
-          </CardDescription>
+          <CardTitle>Create a new note</CardTitle>
+          <CardDescription>Share a title and content — it will be saved to your API.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-5" onSubmit={handleSubmit}>
@@ -71,7 +69,7 @@ export default function CreatePostPage() {
               <Label htmlFor="title">Title</Label>
               <Input
                 id="title"
-                placeholder="Enter a catchy title"
+                placeholder="Enter a title"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={255}
@@ -82,7 +80,7 @@ export default function CreatePostPage() {
               <Label htmlFor="content">Content</Label>
               <Textarea
                 id="content"
-                placeholder="Write your post content here..."
+                placeholder="Write your note here..."
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
               />
@@ -96,10 +94,10 @@ export default function CreatePostPage() {
 
             <div className="flex flex-wrap gap-3">
               <Button type="submit" disabled={loading}>
-                {loading ? "Publishing..." : "Publish post"}
+                {loading ? "Saving..." : "Save note"}
               </Button>
               <Button asChild type="button" variant="outline">
-                <Link to="/posts">Cancel</Link>
+                <Link to="/notes">Cancel</Link>
               </Button>
             </div>
           </form>

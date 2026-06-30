@@ -7,14 +7,16 @@ import Layout from "./components/static/Layout";
 import { AuthProvider } from "./contexts/AuthContext";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoryDetailPage from "./pages/CategoryDetailPage";
+import ClientsPage from "./pages/ClientsPage";
 import CreateCategoryPage from "./pages/CreateCategoryPage";
-import CreatePostPage from "./pages/CreatePostPage";
+import CreateNotePage from "./pages/CreateNotePage";
 import EditCategoryPage from "./pages/EditCategoryPage";
-import EditPostPage from "./pages/EditPostPage";
+import EditNotePage from "./pages/EditNotePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import PostDetailPage from "./pages/PostDetailPage";
-import PostsPage from "./pages/PostsPage";
+import NoteDetailPage from "./pages/NoteDetailPage";
+import NotesPage from "./pages/NotesPage";
+import OrdersPage from "./pages/OrdersPage";
 import ProductsPage from "./pages/ProductsPage";
 import RegisterPage from "./pages/RegisterPage";
 
@@ -32,10 +34,10 @@ export default function App() {
 
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
-            <Route path="posts" element={<PostsPage />} />
-            <Route path="posts/new" element={<CreatePostPage />} />
-            <Route path="posts/:id" element={<PostDetailPage />} />
-            <Route path="posts/:id/edit" element={<EditPostPage />} />
+            <Route path="notes" element={<NotesPage />} />
+            <Route path="notes/new" element={<CreateNotePage />} />
+            <Route path="notes/:id" element={<NoteDetailPage />} />
+            <Route path="notes/:id/edit" element={<EditNotePage />} />
 
             <Route element={<ProtectedRoute />}>
               <Route path="categories" element={<CategoriesPage />} />
@@ -43,6 +45,8 @@ export default function App() {
               <Route path="categories/:id" element={<CategoryDetailPage />} />
               <Route path="categories/:id/edit" element={<EditCategoryPage />} />
               <Route path="products" element={<ProductsPage />} />
+              <Route path="clients" element={<ClientsPage />} />
+              <Route path="orders" element={<OrdersPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

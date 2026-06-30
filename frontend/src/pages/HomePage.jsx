@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import api from "@/services/api";
-import { getPosts } from "@/services/posts";
+import { getNotes } from "@/services/notes";
 
 function formatDate(dateString) {
   if (!dateString) return "";
@@ -25,8 +25,8 @@ function formatDate(dateString) {
 export default function HomePage() {
   const [apiStatus, setApiStatus] = useState("loading");
   const [apiMessage, setApiMessage] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [notes, setNotes] = useState([]);
+  const [loadingNotes, setLoadingNotes] = useState(true);
 
   useEffect(() => {
     api
@@ -40,10 +40,10 @@ export default function HomePage() {
         setApiStatus("offline");
       });
 
-    getPosts()
-      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 3) : []))
-      .catch(() => setPosts([]))
-      .finally(() => setLoadingPosts(false));
+    getNotes()
+      .then((data) => setNotes(Array.isArray(data) ? data.slice(0, 3) : []))
+      .catch(() => setNotes([]))
+      .finally(() => setLoadingNotes(false));
   }, []);
 
   return (
@@ -63,20 +63,20 @@ export default function HomePage() {
               Welcome to Budgie
             </h1>
             <p className="max-w-2xl text-base text-muted-foreground md:text-lg">
-              A simple content platform powered by your Laravel API. Browse posts,
-              create new stories, and manage everything from a clean interface.
+              A simple content platform powered by your Laravel API. Browse notes,
+              manage clients, products, and orders from a clean interface.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
-              <Link to="/posts">
-                Browse posts
+              <Link to="/notes">
+                Browse notes
                 <ArrowRight data-icon="inline-end" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/posts">Write a post</Link>
+              <Link to="/notes">Write a note</Link>
             </Button>
           </div>
         </div>
@@ -105,11 +105,11 @@ export default function HomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Posts</CardTitle>
+            <CardTitle>Notes</CardTitle>
             <CardDescription>
-              {loadingPosts
+              {loadingNotes
                 ? "Loading count..."
-                : `${posts.length > 0 ? "Latest entries available" : "No posts yet — create the first one"}`}
+                : `${notes.length > 0 ? "Latest entries available" : "No notes yet — create the first one"}`}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -121,7 +121,7 @@ export default function HomePage() {
               Full CRUD
             </CardTitle>
             <CardDescription>
-              Create, read, update, and delete posts through the REST API.
+              Create, read, update, and delete notes through the REST API.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -130,45 +130,45 @@ export default function HomePage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold">Recent posts</h2>
+            <h2 className="text-xl font-semibold">Recent notes</h2>
             <p className="text-sm text-muted-foreground">
               A quick look at the latest content from your backend.
             </p>
           </div>
           <Button asChild variant="ghost">
-            <Link to="/posts">View all</Link>
+            <Link to="/notes">View all</Link>
           </Button>
         </div>
 
-        {loadingPosts ? (
+        {loadingNotes ? (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              Loading posts...
+              Loading notes...
             </CardContent>
           </Card>
-        ) : posts.length === 0 ? (
+        ) : notes.length === 0 ? (
           <Card>
             <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
-              <p className="text-muted-foreground">No posts published yet.</p>
+              <p className="text-muted-foreground">No notes published yet.</p>
               <Button asChild>
-                <Link to="/posts">Create your first post</Link>
+                <Link to="/notes">Create your first note</Link>
               </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-3">
-            {posts.map((post) => (
-              <Card key={post.id} className="flex flex-col">
+            {notes.map((note) => (
+              <Card key={note.id} className="flex flex-col">
                 <CardHeader>
-                  <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-                  <CardDescription>{formatDate(post.created_at)}</CardDescription>
+                  <CardTitle className="line-clamp-2">{note.title}</CardTitle>
+                  <CardDescription>{formatDate(note.created_at)}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between gap-4">
                   <p className="line-clamp-3 text-sm text-muted-foreground">
-                    {post.content}
+                    {note.content}
                   </p>
                   <Button asChild variant="outline" className="w-fit">
-                    <Link to={`/posts/${post.id}`}>Read more</Link>
+                    <Link to={`/notes/${note.id}`}>Read more</Link>
                   </Button>
                 </CardContent>
               </Card>

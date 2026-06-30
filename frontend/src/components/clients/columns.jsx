@@ -1,20 +1,10 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
+import { formatClientName, formatDate } from "@/components/clients/client-form";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/ui/data-table";
 
-function formatDate(dateString) {
-  if (!dateString) return "—";
-  return new Date(dateString).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-export function getPostColumns({ onView, onEdit, onDelete, deletingId }) {
+export function getClientColumns({ onView, onEdit, onDelete, deletingId }) {
   return [
     {
       accessorKey: "id",
@@ -24,21 +14,27 @@ export function getPostColumns({ onView, onEdit, onDelete, deletingId }) {
       ),
     },
     {
-      accessorKey: "title",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Title" />,
+      id: "name",
+      accessorFn: (row) => formatClientName(row),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+      cell: ({ row }) => <span className="font-medium">{formatClientName(row.original)}</span>,
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
       cell: ({ row }) => (
-        <span className="max-w-xs truncate font-medium">{row.getValue("title")}</span>
+        <span className="text-muted-foreground">{row.getValue("email")}</span>
       ),
     },
     {
-      accessorKey: "content",
-      header: "Content",
-      enableSorting: false,
-      cell: ({ row }) => (
-        <span className="block max-w-md truncate text-muted-foreground">
-          {row.getValue("content")}
-        </span>
-      ),
+      accessorKey: "phone",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Phone" />,
+      cell: ({ row }) => row.getValue("phone"),
+    },
+    {
+      accessorKey: "zip",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Zip" />,
+      cell: ({ row }) => row.getValue("zip"),
     },
     {
       accessorKey: "created_at",
@@ -52,25 +48,15 @@ export function getPostColumns({ onView, onEdit, onDelete, deletingId }) {
       enableSorting: false,
       header: () => <span className="sr-only">Actions</span>,
       cell: ({ row }) => {
-        const post = row.original;
-        const isDeleting = deletingId === post.id;
+        const client = row.original;
+        const isDeleting = deletingId === client.id;
 
         return (
           <div className="flex justify-end gap-1">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => onView(post)}
-              title="View"
-            >
+            <Button variant="ghost" size="icon-sm" onClick={() => onView(client)} title="View">
               <Eye className="size-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => onEdit(post)}
-              title="Edit"
-            >
+            <Button variant="ghost" size="icon-sm" onClick={() => onEdit(client)} title="Edit">
               <Pencil className="size-4" />
             </Button>
             <Button
@@ -78,7 +64,7 @@ export function getPostColumns({ onView, onEdit, onDelete, deletingId }) {
               size="icon-sm"
               className="text-destructive hover:text-destructive"
               disabled={isDeleting}
-              onClick={() => onDelete(post)}
+              onClick={() => onDelete(client)}
               title="Delete"
             >
               <Trash2 className="size-4" />

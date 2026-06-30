@@ -13,9 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createPost } from "@/services/posts";
+import { createNote } from "@/services/notes";
 
-export default function PostCreateDialog({ open, onOpenChange, onCreated }) {
+export default function NoteCreateDialog({ open, onOpenChange, onCreated }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,16 +43,16 @@ export default function PostCreateDialog({ open, onOpenChange, onCreated }) {
 
     setLoading(true);
     try {
-      const post = await createPost({ title: title.trim(), content: content.trim() });
-      toast.success("Post created", {
-        description: `"${post.title}" has been published.`,
+      const note = await createNote({ title: title.trim(), content: content.trim() });
+      toast.success("Note created", {
+        description: `"${note.title}" has been saved.`,
       });
-      onCreated?.(post);
+      onCreated?.(note);
       handleOpenChange(false);
     } catch {
-      setError("Failed to create the post. Please try again.");
+      setError("Failed to create the note. Please try again.");
       toast.error("Create failed", {
-        description: "Could not publish the post.",
+        description: "Could not save the note.",
       });
     } finally {
       setLoading(false);
@@ -63,18 +63,16 @@ export default function PostCreateDialog({ open, onOpenChange, onCreated }) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create a new post</DialogTitle>
-          <DialogDescription>
-            Add a title and content for your new article.
-          </DialogDescription>
+          <DialogTitle>Create a new note</DialogTitle>
+          <DialogDescription>Add a title and content for your note.</DialogDescription>
         </DialogHeader>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="create-post-title">Title</Label>
+            <Label htmlFor="create-note-title">Title</Label>
             <Input
-              id="create-post-title"
-              placeholder="Enter a catchy title"
+              id="create-note-title"
+              placeholder="Enter a title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               maxLength={255}
@@ -83,10 +81,10 @@ export default function PostCreateDialog({ open, onOpenChange, onCreated }) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="create-post-content">Content</Label>
+            <Label htmlFor="create-note-content">Content</Label>
             <Textarea
-              id="create-post-content"
-              placeholder="Write your post content here..."
+              id="create-note-content"
+              placeholder="Write your note here..."
               value={content}
               onChange={(event) => setContent(event.target.value)}
               className="min-h-32"
@@ -109,7 +107,7 @@ export default function PostCreateDialog({ open, onOpenChange, onCreated }) {
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Publishing..." : "Publish post"}
+              {loading ? "Saving..." : "Save note"}
             </Button>
           </DialogFooter>
         </form>

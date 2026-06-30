@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getPost, updatePost } from "@/services/posts";
+import { getNote, updateNote } from "@/services/notes";
 
-export default function EditPostPage() {
+export default function EditNotePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -26,12 +26,12 @@ export default function EditPostPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getPost(id)
-      .then((post) => {
-        setTitle(post.title ?? "");
-        setContent(post.content ?? "");
+    getNote(id)
+      .then((note) => {
+        setTitle(note.title ?? "");
+        setContent(note.content ?? "");
       })
-      .catch(() => setError("Post not found or unavailable."))
+      .catch(() => setError("Note not found or unavailable."))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -46,15 +46,15 @@ export default function EditPostPage() {
 
     setSaving(true);
     try {
-      const updated = await updatePost(id, { title: title.trim(), content: content.trim() });
-      toast.success("Post updated", {
+      const updated = await updateNote(id, { title: title.trim(), content: content.trim() });
+      toast.success("Note updated", {
         description: `"${updated.title}" has been saved.`,
       });
-      navigate("/posts");
+      navigate("/notes");
     } catch {
-      setError("Failed to update the post. Please try again.");
+      setError("Failed to update the note. Please try again.");
       toast.error("Update failed", {
-        description: "Could not save the post.",
+        description: "Could not save the note.",
       });
     } finally {
       setSaving(false);
@@ -66,7 +66,7 @@ export default function EditPostPage() {
       <div className="mx-auto w-full max-w-2xl px-4 py-8 md:px-6">
         <Card>
           <CardContent className="py-16 text-center text-muted-foreground">
-            Loading post...
+            Loading note...
           </CardContent>
         </Card>
       </div>
@@ -80,9 +80,9 @@ export default function EditPostPage() {
           <CardContent className="flex flex-col items-center gap-4 py-12 text-center">
             <p className="text-destructive">{error}</p>
             <Button asChild variant="outline">
-              <Link to="/posts">
+              <Link to="/notes">
                 <ArrowLeft data-icon="inline-start" />
-                Back to posts
+                Back to notes
               </Link>
             </Button>
           </CardContent>
@@ -94,16 +94,16 @@ export default function EditPostPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8 md:px-6">
       <Button asChild variant="ghost" className="w-fit">
-        <Link to="/posts">
+        <Link to="/notes">
           <ArrowLeft data-icon="inline-start" />
-          Back to posts
+          Back to notes
         </Link>
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit post</CardTitle>
-          <CardDescription>Update the title or content of this article.</CardDescription>
+          <CardTitle>Edit note</CardTitle>
+          <CardDescription>Update the title or content of this note.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-5" onSubmit={handleSubmit}>
@@ -137,7 +137,7 @@ export default function EditPostPage() {
                 {saving ? "Saving..." : "Save changes"}
               </Button>
               <Button asChild type="button" variant="outline">
-                <Link to="/posts">Cancel</Link>
+                <Link to="/notes">Cancel</Link>
               </Button>
             </div>
           </form>

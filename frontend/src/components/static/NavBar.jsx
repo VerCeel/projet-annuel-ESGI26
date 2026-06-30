@@ -1,5 +1,16 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Feather, Home, LogIn, LogOut, Package, Rows3, Tag, UserPlus } from "lucide-react";
+import {
+  Feather,
+  Home,
+  LogIn,
+  LogOut,
+  Package,
+  ShoppingCart,
+  StickyNote,
+  Tag,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,12 +19,14 @@ import { cn } from "@/lib/utils";
 
 const publicLinks = [
   { to: "/", label: "Home", icon: Home, end: true },
-  { to: "/posts", label: "Posts", icon: Rows3 },
+  { to: "/notes", label: "Notes", icon: StickyNote },
 ];
 
 const protectedLinks = [
   { to: "/categories", label: "Categories", icon: Tag },
   { to: "/products", label: "Products", icon: Package },
+  { to: "/clients", label: "Clients", icon: Users },
+  { to: "/orders", label: "Orders", icon: ShoppingCart },
 ];
 
 export default function NavBar() {

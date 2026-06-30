@@ -3,9 +3,11 @@ import { Code2, Feather } from "lucide-react";
 
 const footerLinks = [
   { to: "/", label: "Home" },
-  { to: "/posts", label: "Posts" },
+  { to: "/notes", label: "Notes" },
   { to: "/categories", label: "Categories" },
   { to: "/products", label: "Products" },
+  { to: "/clients", label: "Clients" },
+  { to: "/orders", label: "Orders" },
 ];
 
 export default function Footer() {
@@ -20,8 +22,8 @@ export default function Footer() {
             <span className="text-lg font-semibold">Budgie</span>
           </div>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            A Laravel-powered blog platform with a modern React frontend. Create,
-            browse, and manage posts with a clean, responsive interface.
+            A Laravel-powered platform with a modern React frontend. Create, browse,
+            and manage notes, clients, products, and orders.
           </p>
         </div>
 

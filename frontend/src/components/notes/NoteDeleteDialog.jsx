@@ -11,24 +11,24 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export default function PostDeleteDialog({
-  post,
+export default function NoteDeleteDialog({
+  note,
   open,
   onOpenChange,
   onConfirm,
   loading,
 }) {
-  if (!post) return null;
+  if (!note) return null;
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete post?</AlertDialogTitle>
+          <AlertDialogTitle>Delete note?</AlertDialogTitle>
           <AlertDialogDescription>
             This will permanently delete{" "}
-            <strong className="text-foreground">"{post.title}"</strong>. This action
-            cannot be undone.
+            <strong className="text-foreground">"{note.title}"</strong>. This action cannot be
+            undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -13,27 +13,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { updatePost } from "@/services/posts";
+import { updateNote } from "@/services/notes";
 
-export default function PostEditDialog({ post, open, onOpenChange, onUpdated }) {
+export default function NoteEditDialog({ note, open, onOpenChange, onUpdated }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (post && open) {
-      setTitle(post.title ?? "");
-      setContent(post.content ?? "");
+    if (note && open) {
+      setTitle(note.title ?? "");
+      setContent(note.content ?? "");
       setError("");
     }
-  }, [post, open]);
+  }, [note, open]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
-    if (!post) return;
+    if (!note) return;
 
     if (!title.trim() || !content.trim()) {
       setError("Title and content are required.");
@@ -42,40 +42,40 @@ export default function PostEditDialog({ post, open, onOpenChange, onUpdated }) 
 
     setSaving(true);
     try {
-      const updated = await updatePost(post.id, {
+      const updated = await updateNote(note.id, {
         title: title.trim(),
         content: content.trim(),
       });
-      toast.success("Post updated", {
+      toast.success("Note updated", {
         description: `"${updated.title}" has been saved.`,
       });
       onUpdated?.(updated);
       onOpenChange(false);
     } catch {
-      setError("Failed to update the post. Please try again.");
+      setError("Failed to update the note. Please try again.");
       toast.error("Update failed", {
-        description: "Could not save the post.",
+        description: "Could not save the note.",
       });
     } finally {
       setSaving(false);
     }
   };
 
-  if (!post) return null;
+  if (!note) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit post</DialogTitle>
-          <DialogDescription>Update post #{post.id}.</DialogDescription>
+          <DialogTitle>Edit note</DialogTitle>
+          <DialogDescription>Update note #{note.id}.</DialogDescription>
         </DialogHeader>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="edit-post-title">Title</Label>
+            <Label htmlFor="edit-note-title">Title</Label>
             <Input
-              id="edit-post-title"
+              id="edit-note-title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               maxLength={255}
@@ -84,9 +84,9 @@ export default function PostEditDialog({ post, open, onOpenChange, onUpdated }) 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="edit-post-content">Content</Label>
+            <Label htmlFor="edit-note-content">Content</Label>
             <Textarea
-              id="edit-post-content"
+              id="edit-note-content"
               value={content}
               onChange={(event) => setContent(event.target.value)}
               className="min-h-32"

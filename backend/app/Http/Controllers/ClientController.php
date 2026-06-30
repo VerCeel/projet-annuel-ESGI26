@@ -8,60 +8,51 @@ use App\Models\Client;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $clients = Client::orderBy('updated_at', 'desc')->get();
+
         return response()->json($clients);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreClientRequest $request)
     {
-        //
+        $client = Client::create($request->validated());
+
+        return response()->json($client, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Client $client)
+    public function show(int $id)
     {
-        //
+        $client = Client::find($id);
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+
+        return response()->json($client);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Client $client)
+    public function update(UpdateClientRequest $request, int $id)
     {
-        //
+        $client = Client::find($id);
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+
+        $client->update($request->validated());
+
+        return response()->json($client);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateClientRequest $request, Client $client)
+    public function destroy(int $id)
     {
-        //
-    }
+        $client = Client::find($id);
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Client $client)
-    {
-        //
+        $client->delete();
+
+        return response()->json(['message' => 'Client deleted successfully']);
     }
 }

@@ -1,84 +1,86 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileText, Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import { toast } from "sonner";
 
-import { getPostColumns } from "@/components/posts/columns";
-import PostCreateDialog from "@/components/posts/PostCreateDialog";
-import PostDeleteDialog from "@/components/posts/PostDeleteDialog";
-import PostEditDialog from "@/components/posts/PostEditDialog";
-import PostShowDialog from "@/components/posts/PostShowDialog";
+import { getClientColumns } from "@/components/clients/columns";
+import ClientCreateDialog from "@/components/clients/ClientCreateDialog";
+import ClientDeleteDialog from "@/components/clients/ClientDeleteDialog";
+import ClientEditDialog from "@/components/clients/ClientEditDialog";
+import ClientShowDialog from "@/components/clients/ClientShowDialog";
+import { formatClientName } from "@/components/clients/client-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
-import { deletePost, getPosts } from "@/services/posts";
+import { deleteClient, getClients } from "@/services/clients";
 
-export default function PostsPage() {
-  const [posts, setPosts] = useState([]);
+export default function ClientsPage() {
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
-  const [showPost, setShowPost] = useState(null);
+  const [showClient, setShowClient] = useState(null);
   const [showOpen, setShowOpen] = useState(false);
 
-  const [editPost, setEditPost] = useState(null);
+  const [editClient, setEditClient] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
 
-  const [deletePostTarget, setDeletePostTarget] = useState(null);
+  const [deleteClientTarget, setDeleteClientTarget] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [createOpen, setCreateOpen] = useState(false);
 
-  const loadPosts = async () => {
+  const loadClients = async () => {
     setError("");
     setLoading(true);
     try {
-      const data = await getPosts();
-      setPosts(Array.isArray(data) ? data : []);
+      const data = await getClients();
+      setClients(Array.isArray(data) ? data : []);
     } catch {
-      setError("Failed to load posts. Make sure the backend is running.");
-      setPosts([]);
+      setError("Failed to load clients. Make sure the backend is running.");
+      setClients([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadPosts();
+    loadClients();
   }, []);
 
-  const handleView = useCallback((post) => {
-    setShowPost(post);
+  const handleView = useCallback((client) => {
+    setShowClient(client);
     setShowOpen(true);
   }, []);
 
-  const handleEdit = useCallback((post) => {
-    setEditPost(post);
+  const handleEdit = useCallback((client) => {
+    setEditClient(client);
     setEditOpen(true);
   }, []);
 
-  const handleDeleteClick = useCallback((post) => {
-    setDeletePostTarget(post);
+  const handleDeleteClick = useCallback((client) => {
+    setDeleteClientTarget(client);
     setDeleteOpen(true);
   }, []);
 
   const handleDeleteConfirm = async () => {
-    if (!deletePostTarget) return;
+    if (!deleteClientTarget) return;
 
-    const { id, title } = deletePostTarget;
+    const { id } = deleteClientTarget;
+    const name = formatClientName(deleteClientTarget);
     setDeletingId(id);
 
     try {
-      await deletePost(id);
-      await loadPosts();
+      await deleteClient(id);
+      await loadClients();
       setDeleteOpen(false);
-      setDeletePostTarget(null);
-      toast.success("Post deleted", {
-        description: `"${title}" has been removed.`,
+      setDeleteClientTarget(null);
+      toast.success("Client deleted", {
+        description: `${name} has been removed.`,
       });
     } catch {
       toast.error("Delete failed", {
-        description: `Could not delete "${title}".`,
+        description: `Could not delete ${name}.`,
       });
     } finally {
       setDeletingId(null);
@@ -87,7 +89,7 @@ export default function PostsPage() {
 
   const columns = useMemo(
     () =>
-      getPostColumns({
+      getClientColumns({
         onView: handleView,
         onEdit: handleEdit,
         onDelete: handleDeleteClick,
@@ -100,14 +102,14 @@ export default function PostsPage() {
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 md:px-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Posts</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Clients</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage articles in a sortable, filterable data table.
+            Manage client contact information in a sortable data table.
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus data-icon="inline-start" />
-          New post
+          New client
         </Button>
       </div>
 
@@ -120,50 +122,50 @@ export default function PostsPage() {
       {loading ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            Loading posts...
+            Loading clients...
           </CardContent>
         </Card>
-      ) : posts.length === 0 ? (
+      ) : clients.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-4 py-16 text-center">
-            <FileText className="size-10 text-muted-foreground" />
-            <p className="text-muted-foreground">No posts found.</p>
+            <Users className="size-10 text-muted-foreground" />
+            <p className="text-muted-foreground">No clients found.</p>
             <Button onClick={() => setCreateOpen(true)}>
               <Plus data-icon="inline-start" />
-              Create a post
+              Create a client
             </Button>
           </CardContent>
         </Card>
       ) : (
         <DataTable
           columns={columns}
-          data={posts}
-          filterColumn="title"
-          filterPlaceholder="Filter posts..."
+          data={clients}
+          filterColumn="email"
+          filterPlaceholder="Filter clients..."
         />
       )}
 
-      <PostShowDialog post={showPost} open={showOpen} onOpenChange={setShowOpen} />
+      <ClientShowDialog client={showClient} open={showOpen} onOpenChange={setShowOpen} />
 
-      <PostEditDialog
-        post={editPost}
+      <ClientEditDialog
+        client={editClient}
         open={editOpen}
         onOpenChange={setEditOpen}
-        onUpdated={loadPosts}
+        onUpdated={loadClients}
       />
 
-      <PostDeleteDialog
-        post={deletePostTarget}
+      <ClientDeleteDialog
+        client={deleteClientTarget}
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         onConfirm={handleDeleteConfirm}
-        loading={deletingId === deletePostTarget?.id}
+        loading={deletingId === deleteClientTarget?.id}
       />
 
-      <PostCreateDialog
+      <ClientCreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
-        onCreated={loadPosts}
+        onCreated={loadClients}
       />
     </div>
   );
