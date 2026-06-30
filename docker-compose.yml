@@ -47,6 +47,7 @@ services:
     command: >
       sh -c "
       if [ ! -f .env ]; then cp .env.example .env; fi &&
+      sed -i -e 's/^DB_HOST=.*/DB_HOST=postgres/' -e 's/^DB_DATABASE=.*/DB_DATABASE=budgie_db/' -e 's/^DB_USERNAME=.*/DB_USERNAME=root/' -e 's/^DB_PASSWORD=.*/DB_PASSWORD=root/' -e 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' -e 's/^CACHE_STORE=.*/CACHE_STORE=file/' -e 's/^QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env &&
       if [ ! -f vendor/autoload.php ]; then composer install; fi &&
       if ! grep -q '^APP_KEY=base64:' .env; then php artisan key:generate --force; fi &&
       php artisan migrate --force &&
