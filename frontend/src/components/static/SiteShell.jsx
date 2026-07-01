@@ -2,7 +2,6 @@
 
 import AppSidebar from "@/components/static/AppSidebar";
 import AppNavBar from "@/components/static/AppNavBar";
-import Footer from "@/components/static/Footer";
 import PublicNavBar from "@/components/static/PublicNavBar";
 import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,7 +20,6 @@ function AuthenticatedMain({ children }) {
       <AppNavBar />
       <div className="flex flex-1 flex-col">
         <div className="flex-1">{children}</div>
-        <Footer />
       </div>
     </SidebarInset>
   );
@@ -32,7 +30,6 @@ function PublicMain({ children }) {
     <div className="flex min-h-screen flex-col">
       <PublicNavBar />
       <main className="flex-1">{children}</main>
-      <Footer />
     </div>
   );
 }

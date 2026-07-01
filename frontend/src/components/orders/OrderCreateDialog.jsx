@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getClients } from "@/services/clients";
-import { createOrder } from "@/services/orders";
+import { createOrder, getOrderErrorMessage } from "@/services/orders";
 import { getProducts } from "@/services/products";
 
 export default function OrderCreateDialog({ open, onOpenChange, onCreated }) {
@@ -75,10 +75,11 @@ export default function OrderCreateDialog({ open, onOpenChange, onCreated }) {
       });
       onCreated?.(order);
       handleOpenChange(false);
-    } catch {
-      setError("Failed to create the order. Please try again.");
+    } catch (err) {
+      const message = getOrderErrorMessage(err, "Failed to create the order. Please try again.");
+      setError(message);
       toast.error("Create failed", {
-        description: "Could not create the order.",
+        description: message,
       });
     } finally {
       setLoading(false);

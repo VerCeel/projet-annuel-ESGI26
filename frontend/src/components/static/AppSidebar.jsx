@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Package,
   PanelLeftClose,
   PanelLeftOpen,
@@ -30,12 +29,12 @@ import {
 import { cn } from "@/lib/utils";
 
 const mainLinks = [
-  { href: "/products", label: "Products", icon: Package },
   { href: "/notes", label: "Notes", icon: StickyNote },
 ];
 
 const managementLinks = [
   { href: "/categories", label: "Categories", icon: Tag },
+  { href: "/products", label: "Products", icon: Package },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/orders", label: "Orders", icon: ShoppingCart },
 ];
@@ -82,17 +81,13 @@ export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <Link href="/products" onClick={handleNavigate} className="px-1">
+        <Link href="/" onClick={handleNavigate} className="px-1">
           <CanariaLogo showName={!collapsed} />
         </Link>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className={cn(collapsed && "sr-only")}>
-            <LayoutDashboard className="mr-1 inline size-3.5" />
-            Stock
-          </SidebarGroupLabel>
           <SidebarMenu>
             <NavItems
               links={mainLinks}

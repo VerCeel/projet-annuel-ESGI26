@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getClients } from "@/services/clients";
-import { updateOrder } from "@/services/orders";
+import { getOrderErrorMessage, updateOrder } from "@/services/orders";
 import { getProducts } from "@/services/products";
 
 export default function OrderEditDialog({ order, open, onOpenChange, onUpdated }) {
@@ -74,10 +74,11 @@ export default function OrderEditDialog({ order, open, onOpenChange, onUpdated }
       });
       onUpdated?.(updated);
       onOpenChange(false);
-    } catch {
-      setError("Failed to update the order. Please try again.");
+    } catch (err) {
+      const message = getOrderErrorMessage(err, "Failed to update the order. Please try again.");
+      setError(message);
       toast.error("Update failed", {
-        description: "Could not save the order.",
+        description: message,
       });
     } finally {
       setSaving(false);

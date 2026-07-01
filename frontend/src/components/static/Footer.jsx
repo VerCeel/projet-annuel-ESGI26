@@ -42,20 +42,11 @@ export default function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold">Stack</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Laravel 13 API</li>
-              <li>Next.js + React</li>
-              <li>Tailwind CSS</li>
-            </ul>
-          </div>
-
-          <div className="space-y-3">
             <h3 className="text-sm font-semibold">Project</h3>
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/VerCeel/projet-laravel-ESGI"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground"
@@ -64,7 +55,7 @@ export default function Footer() {
                   GitHub
                 </a>
               </li>
-              <li className="text-sm text-muted-foreground">ESGI26 — Projet annuel</li>
+              <li className="text-sm text-muted-foreground">ESGI26 — Projet LARAVEL</li>
             </ul>
           </div>
         </div>
@@ -73,7 +64,7 @@ export default function Footer() {
       <div className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground md:flex-row md:px-6">
           <p>© {new Date().getFullYear()} Canaria. All rights reserved.</p>
-          <p>Built with Laravel & Next.js</p>
+          <p>Built by Oussama HIRICH | Ayaz JUBAER | Allan MORLET | Johan PRISO</p>
         </div>
       </div>
     </footer>

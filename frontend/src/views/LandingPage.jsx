@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Boxes,
@@ -12,6 +10,7 @@ import {
   Users,
 } from "lucide-react";
 
+import Footer from "@/components/static/Footer";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -46,20 +45,10 @@ const features = [
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.replace("/products");
-    }
-  }, [isAuthenticated, router]);
-
-  if (isAuthenticated) {
-    return null;
-  }
 
   return (
-    <div className="relative min-h-[calc(100vh-3.5rem)] overflow-hidden">
+    <>
+      <div className="relative min-h-[calc(100vh-3.5rem)] overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_110%)]"
@@ -87,15 +76,26 @@ export default function LandingPage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <Button asChild size="lg">
-              <Link href="/login">
-                Get started
-                <ArrowRight data-icon="inline-end" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/register">Create an account</Link>
-            </Button>
+            {isAuthenticated ? (
+              <Button asChild size="lg">
+                <Link href="/products">
+                  Go to dashboard
+                  <ArrowRight data-icon="inline-end" />
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild size="lg">
+                  <Link href="/login">
+                    Get started
+                    <ArrowRight data-icon="inline-end" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <Link href="/register">Create an account</Link>
+                </Button>
+              </>
+            )}
           </div>
         </section>
 
@@ -118,19 +118,35 @@ export default function LandingPage() {
             Ready to take control of your stock?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            Sign in to access the full dashboard with sidebar navigation, or browse public
-            notes while you explore the platform.
+            {isAuthenticated
+              ? "Open the dashboard to manage products, clients, and orders."
+              : "Sign in to access the full dashboard with sidebar navigation, or browse public notes while you explore the platform."}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild>
-              <Link href="/login">Sign in to dashboard</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/notes">Browse notes</Link>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button asChild>
+                  <Link href="/products">Open dashboard</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/notes">Browse notes</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild>
+                  <Link href="/login">Sign in to dashboard</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="/notes">Browse notes</Link>
+                </Button>
+              </>
+            )}
           </div>
         </section>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

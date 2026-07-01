@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class OrderController extends Controller
 {
@@ -24,9 +26,22 @@ class OrderController extends Controller
         $products = $validated['products'];
         unset($validated['client_ids'], $validated['products']);
 
-        $order = Order::create($validated);
-        $order->clients()->sync($clientIds);
-        $order->products()->sync($this->formatProductSync($products));
+        try {
+            $order = DB::transaction(function () use ($validated, $clientIds, $products) {
+                $order = Order::create($validated);
+                $order->clients()->sync($clientIds);
+                $order->products()->sync($this->formatProductSync($products));
+
+                if ($this->isStockCommitted($order->status)) {
+                    $order->load('products');
+                    $this->decrementStock($order);
+                }
+
+                return $order;
+            });
+        } catch (RuntimeException $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
 
         return response()->json($order->load(['clients', 'products']), 201);
     }
@@ -53,9 +68,27 @@ class OrderController extends Controller
         $products = $validated['products'];
         unset($validated['client_ids'], $validated['products']);
 
-        $order->update($validated);
-        $order->clients()->sync($clientIds);
-        $order->products()->sync($this->formatProductSync($products));
+        try {
+            $order = DB::transaction(function () use ($order, $validated, $clientIds, $products) {
+                $order->load('products');
+                $oldStatus = $order->status;
+                $newStatus = $validated['status'];
+
+                if (! $this->isStockCommitted($oldStatus) && $this->isStockCommitted($newStatus)) {
+                    $this->decrementStock($order);
+                } elseif ($this->isStockCommitted($oldStatus) && ! $this->isStockCommitted($newStatus)) {
+                    $this->restoreStock($order);
+                }
+
+                $order->update($validated);
+                $order->clients()->sync($clientIds);
+                $order->products()->sync($this->formatProductSync($products));
+
+                return $order;
+            });
+        } catch (RuntimeException $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
 
         return response()->json($order->load(['clients', 'products']));
     }
@@ -67,7 +100,19 @@ class OrderController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
 
-        $order->delete();
+        try {
+            DB::transaction(function () use ($order) {
+                $order->load('products');
+
+                if ($this->isStockCommitted($order->status)) {
+                    $this->restoreStock($order);
+                }
+
+                $order->delete();
+            });
+        } catch (RuntimeException $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
 
         return response()->json(['message' => 'Order deleted successfully']);
     }
@@ -109,5 +154,35 @@ class OrderController extends Controller
         }
 
         return $sync;
+    }
+
+    private function isStockCommitted(string $status): bool
+    {
+        return in_array($status, ['confirmed', 'shipped', 'delivered'], true);
+    }
+
+    private function decrementStock(Order $order): void
+    {
+        foreach ($order->products as $product) {
+            $quantity = (int) $product->pivot->quantity;
+
+            if ($product->stock < $quantity) {
+                throw new RuntimeException(
+                    'Insufficient stock for "'.$product->name.'". Available: '.$product->stock.', required: '.$quantity.'.'
+                );
+            }
+
+            $product->stock -= $quantity;
+            $product->save();
+        }
+    }
+
+    private function restoreStock(Order $order): void
+    {
+        foreach ($order->products as $product) {
+            $quantity = (int) $product->pivot->quantity;
+            $product->stock += $quantity;
+            $product->save();
+        }
     }
 }

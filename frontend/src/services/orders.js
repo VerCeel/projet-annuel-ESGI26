@@ -1,5 +1,9 @@
 import api from "./api";
 
+export function getOrderErrorMessage(error, fallback = "Something went wrong.") {
+  return error?.response?.data?.error ?? fallback;
+}
+
 export async function getOrders() {
   const response = await api.get("/orders");
   return response.data;
