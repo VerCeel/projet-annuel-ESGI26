@@ -22,6 +22,13 @@ class Product extends Model
         'category_id',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Product $product) {
+            $product->status = $product->stock > 0 ? 'in stock' : 'out of stock';
+        });
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

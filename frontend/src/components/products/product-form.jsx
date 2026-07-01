@@ -5,11 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-export const PRODUCT_STATUSES = [
-  { value: "in stock", label: "In stock" },
-  { value: "out of stock", label: "Out of stock" },
-];
-
 export function ProductFormFields({
   idPrefix,
   values,
@@ -82,40 +77,27 @@ export function ProductFormFields({
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor={`${idPrefix}-category`}>Category</Label>
-          <Select
-            id={`${idPrefix}-category`}
-            value={values.category_id}
-            onChange={set("category_id")}
-            disabled={categoriesLoading || categories.length === 0}
-          >
-            <option value="">
-              {categoriesLoading
-                ? "Loading categories..."
-                : categories.length === 0
-                  ? "No categories available"
-                  : "Select a category"}
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}-category`}>Category</Label>
+        <Select
+          id={`${idPrefix}-category`}
+          value={values.category_id}
+          onChange={set("category_id")}
+          disabled={categoriesLoading || categories.length === 0}
+        >
+          <option value="">
+            {categoriesLoading
+              ? "Loading categories..."
+              : categories.length === 0
+                ? "No categories available"
+                : "Select a category"}
+          </option>
+          {categories.map((category) => (
+            <option key={category.id} value={String(category.id)}>
+              {category.name}
             </option>
-            {categories.map((category) => (
-              <option key={category.id} value={String(category.id)}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor={`${idPrefix}-status`}>Status</Label>
-          <Select id={`${idPrefix}-status`} value={values.status} onChange={set("status")}>
-            {PRODUCT_STATUSES.map((status) => (
-              <option key={status.value} value={status.value}>
-                {status.label}
-              </option>
-            ))}
-          </Select>
-        </div>
+          ))}
+        </Select>
       </div>
     </div>
   );
@@ -128,7 +110,6 @@ export function emptyProductForm() {
     price: "",
     image: "",
     stock: "",
-    status: "in stock",
     category_id: "",
   };
 }
@@ -140,7 +121,6 @@ export function productToForm(product) {
     price: product?.price != null ? String(product.price) : "",
     image: product?.image ?? "",
     stock: product?.stock != null ? String(product.stock) : "",
-    status: product?.status ?? "in stock",
     category_id: product?.category_id != null ? String(product.category_id) : "",
   };
 }
@@ -152,7 +132,6 @@ export function formToPayload(values) {
     price: Number(values.price),
     image: values.image.trim(),
     stock: Number(values.stock),
-    status: values.status,
     category_id: Number(values.category_id),
   };
 }

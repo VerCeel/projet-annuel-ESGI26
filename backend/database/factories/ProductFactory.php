@@ -17,13 +17,15 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $stock = fake()->numberBetween(0, 100);
+
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
             'price' => fake()->randomFloat(2, 0, 1000),
             'image' => fake()->imageUrl(),
-            'stock' => fake()->numberBetween(0, 100),
-            'status' => fake()->randomElement(['in stock', 'out of stock']),
+            'stock' => $stock,
+            'status' => $stock > 0 ? 'in stock' : 'out of stock',
             'category_id' => rand(1, 10),
         ];
     }
