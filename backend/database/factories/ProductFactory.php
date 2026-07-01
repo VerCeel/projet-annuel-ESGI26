@@ -19,8 +19,12 @@ class ProductFactory extends Factory
     {
         $stock = fake()->numberBetween(0, 100);
 
+        $adjective = fake()->randomElement(['Small', 'Ergonomic', 'Rustic', 'Intelligent', 'Gorgeous', 'Incredible', 'Fantastic', 'Practical', 'Sleek', 'Handcrafted', 'Refined', 'Durable', 'Modern', 'Premium', 'Compact']);
+        $material = fake()->randomElement(['Steel', 'Wooden', 'Cotton', 'Granite', 'Rubber', 'Metal', 'Leather', 'Ceramic', 'Aluminum', 'Bamboo', 'Glass', 'Carbon', 'Plastic']);
+        $item = fake()->randomElement(['Chair', 'Table', 'Lamp', 'Shoes', 'Bottle', 'Bag', 'Watch', 'Keyboard', 'Backpack', 'Mug', 'Jacket', 'Wallet', 'Headphones', 'Notebook', 'Speaker', 'Desk', 'Monitor', 'Cabinet']);
+
         return [
-            'name' => fake()->name(),
+            'name' => $adjective . ' ' . $material . ' ' . $item,
             'description' => fake()->text(),
             'price' => fake()->randomFloat(2, 0, 1000),
             'image' => fake()->imageUrl(),
